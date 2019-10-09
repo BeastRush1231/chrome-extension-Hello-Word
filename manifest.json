@@ -1,0 +1,19 @@
+{  
+  "manifest_version": 2,  
+  "name": "HelloWord！",  
+  "description": "就來作作第一個HelloWord！",  
+  "version": "1.0.0",  
+  "icons":{
+    "16": "icon.png"
+  },
+  "browser_action": {  
+      "default_title": "HelloWord的套件",  
+      "default_icon":{ 
+          "16": "icon.png"
+      },  
+      "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs"
+  ]
+}
