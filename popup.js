@@ -35,10 +35,9 @@ function loginjson(e){
       function(data){
         console.log(data);
         localStorage.setItem('key', data['auth_token']);
-        // if (data['message'] === "ok") {
-        //   admin.classList.add("displaynone");
-        //   newword.classList.remove("displaynone");
-        // }
+        if (data['message'] === "ok") {
+          toggleLoginUI(true);
+        }
       }
     ) // JSON from `response.json()` call
     .catch(
@@ -47,7 +46,6 @@ function loginjson(e){
       }
     )
 }
-
 
 // 回傳學習集單字
 function getSetboxFormValues() {
@@ -61,7 +59,7 @@ function getSetboxFormValues() {
 document.querySelector("#inputjson").addEventListener("click", addwordjson);
 
 function addwordjson(e){
-  // e.preventDefault();
+  e.preventDefault();
   postData('http://localhost:3000/helloword/json', getSetboxFormValues())
     .then(data => console.log(data)) // JSON from `response.json()` call
     .catch(error => console.error(error))
@@ -71,7 +69,6 @@ function addwordjson(e){
 function toggleLoginUI(isLogin) {
   let admin = document.getElementById("admin");
   let newword = document.getElementById("newword");
-
   if (isLogin) {
     admin.classList.add("displaynone");
     newword.classList.remove("displaynone");
@@ -83,7 +80,38 @@ function toggleLoginUI(isLogin) {
 }
 
 let inputadmin = document.getElementById("inputadmin");
-inputadmin.addEventListener("click", function() { toggleLoginUI(true) });
+inputadmin.addEventListener("click", function(){ 
+  console.log('－－－－－');
+  // toggleLoginUI(true);
+});
 
 let logout = document.getElementById("logout");
-logout.addEventListener("click", function() { toggleLoginUI(false) });
+logout.addEventListener("click", function(e){
+  console.log('－－－－－');
+  logoutjson(e);
+  // toggleLoginUI(false);
+});
+
+// -----------------------------------------------------
+// 回傳token
+function getLogoutFormValues(){
+  var logouttoken = localStorage.getItem('key');
+  return { auth_token: logouttoken }
+}
+
+// logoutapi
+function logoutjson(e){
+  e.preventDefault();
+  postData('http://localhost:3000/api/v1/logout', getLogoutFormValues())
+    .then(
+      function(data){
+        console.log(data);
+        toggleLoginUI(false);
+      }
+    ) // JSON from `response.json()` call
+    .catch(
+      function(error){
+        console.log(error); 
+      }
+    )
+}
