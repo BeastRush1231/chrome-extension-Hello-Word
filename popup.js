@@ -1,20 +1,36 @@
+// postdata
+function postData(url, data) {
+  // Default options are marked with *
+  return fetch(url, {
+    body: JSON.stringify(data), // must match 'Content-Type' header
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    // credentials: 'include', // include, same-origin, *omit
+    headers: {
+      'user-agent': 'Mozilla/4.0 MDN Example',
+      'content-type': 'application/json'
+    },
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, cors, *same-origin
+    redirect: 'follow', // manual, *follow, error
+    referrer: 'no-referrer', // *client, no-referrer
+  })
+  .then(response => response.json()) // 輸出成 json
+}
+
+// 回傳帳號密碼
+function getLoginFormValues() {
+  var account = document.querySelector("#accountinput");
+  var password = document.querySelector("#passwordinput");
+
+  return { email: account.value, password: password.value }
+}
+
 // 輸入帳號密碼
-
-function accountinput() {
-  var inputText = document.querySelector("#accountinput");
-  return inputText.value;
-}
-
-function passwordinput() {
-  var inputText = document.querySelector("#passwordinput");
-  return inputText.value;
-}
-
 document.querySelector("#inputadmin").addEventListener("click", loginjson);
 
 function loginjson(e){
   e.preventDefault();
-  postData('http://localhost:3000/api/v1/login', {email: accountinput(),password: passwordinput()})
+  postData('http://localhost:3000/api/v1/login', getLoginFormValues())
     .then(
       function(data){
         console.log(data);
@@ -30,85 +46,44 @@ function loginjson(e){
         console.log(error); 
       }
     )
+}
 
-  function postData(url, data) {
-    // Default options are marked with *
-    return fetch(url, {
-      body: JSON.stringify(data), // must match 'Content-Type' header
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      // credentials: 'include', // include, same-origin, *omit
-      headers: {
-        'user-agent': 'Mozilla/4.0 MDN Example',
-        'content-type': 'application/json'
-      },
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, cors, *same-origin
-      redirect: 'follow', // manual, *follow, error
-      referrer: 'no-referrer', // *client, no-referrer
-    })
-    .then(response => response.json()) // 輸出成 json
-  }
+
+// 回傳學習集單字
+function getSetboxFormValues() {
+  var word = document.querySelector("#wordinput");
+  var setbox = document.querySelector("#setboxinput");
+
+  return { setboxes_title: word.value, card_word: setbox.value }
 }
 
 // 輸入學習集、單字
-
-function wordinput() {
-  var inputText = document.querySelector("#wordinput");
-  return inputText.value;
-}
-
-function setboxinput() {
-  var inputText = document.querySelector("#setboxinput");
-  return inputText.value;
-}
-
 document.querySelector("#inputjson").addEventListener("click", addwordjson);
 
 function addwordjson(e){
   // e.preventDefault();
-  postData('http://localhost:3000/helloword/json', {setboxes_title: setboxinput(),card_word: wordinput()})
+  postData('http://localhost:3000/helloword/json', getSetboxFormValues())
     .then(data => console.log(data)) // JSON from `response.json()` call
     .catch(error => console.error(error))
+}
 
-  function postData(url, data) {
-    // Default options are marked with *
-    return fetch(url, {
-      body: JSON.stringify(data), // must match 'Content-Type' header
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      // credentials: 'same-origin', // include, same-origin, *omit
-      headers: {
-        'user-agent': 'Mozilla/4.0 MDN Example',
-        'content-type': 'application/json'
-      },
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, cors, *same-origin
-      redirect: 'follow', // manual, *follow, error
-      referrer: 'no-referrer', // *client, no-referrer
-    })
-    .then(response => response.json()) // 輸出成 json
+// toggleLoginUI
+function toggleLoginUI(isLogin) {
+  let admin = document.getElementById("admin");
+  let newword = document.getElementById("newword");
+
+  if (isLogin) {
+    admin.classList.add("displaynone");
+    newword.classList.remove("displaynone");
+  } else {
+    localStorage.clear();
+    admin.classList.remove("displaynone");
+    newword.classList.add("displaynone");
   }
 }
 
-// 判斷 localStorage value token 存在
-
-let admin = document.getElementById("admin");
-let newword = document.getElementById("newword");
-
 let inputadmin = document.getElementById("inputadmin");
-
-inputadmin.addEventListener("click", loginfunction);
-
-function loginfunction(){
-  admin.classList.add("displaynone");
-  newword.classList.remove("displaynone");
-}
+inputadmin.addEventListener("click", function() { toggleLoginUI(true) });
 
 let logout = document.getElementById("logout");
-
-logout.addEventListener("click", logoutfunction);
-
-function logoutfunction(){
-  localStorage.clear();
-  admin.classList.remove("displaynone");
-  newword.classList.add("displaynone");
-}
+logout.addEventListener("click", function() { toggleLoginUI(false) });
