@@ -1,3 +1,12 @@
+//initialize
+if (localStorage.getItem('key') === "undefined" || 
+    localStorage.getItem('key') === null ) 
+  {
+    toggleLoginUI(false);
+  } else {
+    toggleLoginUI(true);
+  }
+
 // postdata
 function postData(url, data) {
   // Default options are marked with *
@@ -17,7 +26,7 @@ function postData(url, data) {
   .then(response => response.json()) // 輸出成 json
 }
 
-// 回傳帳號密碼
+// login_admin_password_api_data
 function getLoginFormValues() {
   var account = document.querySelector("#accountinput");
   var password = document.querySelector("#passwordinput");
@@ -25,7 +34,7 @@ function getLoginFormValues() {
   return { email: account.value, password: password.value }
 }
 
-// 輸入帳號密碼
+// login_admin_password_api
 document.querySelector("#inputadmin").addEventListener("click", loginjson);
 
 function loginjson(e){
@@ -37,7 +46,13 @@ function loginjson(e){
         localStorage.setItem('key', data['auth_token']);
         if (data['message'] === "ok") {
           toggleLoginUI(true);
-        }
+        } 
+
+        var setboxselect = document.querySelector("#setboxselect");
+        data['setboxes'].forEach(function(element){
+          console.log(element);
+          setboxselect.innerHTML = `<option id="${element.id}">${element.title}</option>`;
+        })
       }
     ) // JSON from `response.json()` call
     .catch(
@@ -47,15 +62,17 @@ function loginjson(e){
     )
 }
 
-// 回傳學習集單字
+// add_setbox_word_api_data
 function getSetboxFormValues() {
-  var word = document.querySelector("#wordinput");
+  var token = localStorage.getItem('key');
+  var setboxselect = document.querySelector("#setboxselect");
   var setbox = document.querySelector("#setboxinput");
+  var word = document.querySelector("#wordinput");
 
-  return { setboxes_title: word.value, card_word: setbox.value }
+  return { current_token: token, setbox_select: setboxselect.value, setboxes_title: setbox.value, card_word: word.value }
 }
 
-// 輸入學習集、單字
+// add_setbox_word_api
 document.querySelector("#inputjson").addEventListener("click", addwordjson);
 
 function addwordjson(e){
@@ -92,14 +109,13 @@ logout.addEventListener("click", function(e){
   // toggleLoginUI(false);
 });
 
-// -----------------------------------------------------
-// 回傳token
+// logout_token_data
 function getLogoutFormValues(){
   var logouttoken = localStorage.getItem('key');
   return { auth_token: logouttoken }
 }
 
-// logoutapi
+// logout_token_data_api
 function logoutjson(e){
   e.preventDefault();
   postData('http://localhost:3000/api/v1/logout', getLogoutFormValues())
