@@ -1,11 +1,14 @@
 //initialize
-if (localStorage.getItem('key') === "undefined" || 
+function initialize(){
+  if (localStorage.getItem('key') === "undefined" || 
     localStorage.getItem('key') === null ) 
   {
     toggleLoginUI(false);
   } else {
     toggleLoginUI(true);
   }
+}
+initialize()
 
 // postdata
 function postData(url, data) {
@@ -42,17 +45,26 @@ function loginjson(e){
   postData('http://localhost:3000/api/v1/login', getLoginFormValues())
     .then(
       function(data){
-        console.log(data);
         localStorage.setItem('key', data['auth_token']);
         if (data['message'] === "ok") {
           toggleLoginUI(true);
         } 
 
-        var setboxselect = document.querySelector("#setboxselect");
-        data['setboxes'].forEach(function(element){
-          console.log(element);
-          setboxselect.innerHTML = `<option id="${element.id}">${element.title}</option>`;
-        })
+        // data array to hash  
+        let setboxselect = document.querySelector("#setboxselect");
+        let current_setboxes = data['setboxes'].reduce(
+          function(setbox, obj){ 
+            setbox[obj.id] = obj.title; 
+            return setbox; 
+          }, {}
+        );
+
+        localStorage.setItem('setboxeslist',JSON.stringify(current_setboxes));
+        let getsetboxeslist = JSON.parse(localStorage.getItem('setboxeslist'));
+
+        setboxselect.innerHTML = Object.keys(getsetboxeslist).map(function(key) {
+          return `<option id="${key}">${getsetboxeslist[key]}</option>`;
+        });
       }
     ) // JSON from `response.json()` call
     .catch(
@@ -89,6 +101,15 @@ function toggleLoginUI(isLogin) {
   if (isLogin) {
     admin.classList.add("displaynone");
     newword.classList.remove("displaynone");
+    
+    // 登入狀態重開 extension 會爆炸 確保localStorage有東西才執行
+    let list = localStorage.getItem('setboxeslist');
+    if (list != null) {
+      let getsetboxeslist = JSON.parse(list);
+      setboxselect.innerHTML = Object.keys(getsetboxeslist).map(function(key) {
+        return `<option id="${key}">${getsetboxeslist[key]}</option>`;
+      });
+    }
   } else {
     localStorage.clear();
     admin.classList.remove("displaynone");
@@ -98,13 +119,13 @@ function toggleLoginUI(isLogin) {
 
 let inputadmin = document.getElementById("inputadmin");
 inputadmin.addEventListener("click", function(){ 
-  console.log('－－－－－');
+  // console.log('－－－－－');
   // toggleLoginUI(true);
 });
 
 let logout = document.getElementById("logout");
 logout.addEventListener("click", function(e){
-  console.log('－－－－－');
+  // console.log('－－－－－');
   logoutjson(e);
   // toggleLoginUI(false);
 });
