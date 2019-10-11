@@ -65,11 +65,12 @@ function loginjson(e){
         setboxselect.innerHTML = Object.keys(getsetboxeslist).map(function(key) {
           return `<option id="${key}">${getsetboxeslist[key]}</option>`;
         });
+        alert('歡迎登入HelloWord');
       }
     ) // JSON from `response.json()` call
     .catch(
       function(error){
-        console.log(error); 
+        alert('帳號密碼錯誤喔！');
       }
     )
 }
@@ -78,10 +79,9 @@ function loginjson(e){
 function getSetboxFormValues() {
   var token = localStorage.getItem('key');
   var setboxselect = document.querySelector("#setboxselect");
-  var setbox = document.querySelector("#setboxinput");
   var word = document.querySelector("#wordinput");
 
-  return { current_token: token, setbox_select: setboxselect.value, setboxes_title: setbox.value, card_word: word.value }
+  return { auth_token: token, title: setboxselect.value, card_word: word.value }
 }
 
 // add_setbox_word_api
@@ -89,8 +89,8 @@ document.querySelector("#inputjson").addEventListener("click", addwordjson);
 
 function addwordjson(e){
   e.preventDefault();
-  postData('http://localhost:3000/helloword/json', getSetboxFormValues())
-    .then(data => console.log(data)) // JSON from `response.json()` call
+  postData('http://localhost:3000/api/v1/addsetbox', getSetboxFormValues())
+    .then(data => alert('新增成功！')) // JSON from `response.json()` call
     .catch(error => console.error(error))
 }
 
