@@ -90,7 +90,11 @@ document.querySelector("#inputjson").addEventListener("click", addwordjson);
 function addwordjson(e){
   e.preventDefault();
   postData('http://localhost:3000/api/v1/addsetbox', getSetboxFormValues())
-    .then(data => alert('新增成功！')) // JSON from `response.json()` call
+    .then(function(data){
+      console.log(data);
+      alert('新增成功！');
+    } 
+    ) // JSON from `response.json()` call
     .catch(error => console.error(error))
 }
 
