@@ -81,7 +81,21 @@ function getSetboxFormValues() {
   var setboxselect = document.querySelector("#setboxselect");
   var word = document.querySelector("#wordinput");
 
-  return { auth_token: token, title: setboxselect.value, card_word: word.value }
+  return { 
+    // auth_token: token, 
+    // title: setboxselect.value, 
+    // card_word: word.value 
+    setbox: {
+      id: 179,
+      title: setboxselect.value,
+      cards_attributes: [
+          {
+            card_word: word.value,
+            card_def: 'aaa'
+          },
+      ]
+    }
+  }
 }
 
 // add_setbox_word_api
