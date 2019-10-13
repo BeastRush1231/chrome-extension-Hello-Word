@@ -77,21 +77,21 @@ function loginjson(e){
 
 // add_setbox_word_api_data
 function getSetboxFormValues() {
-  var token = localStorage.getItem('key');
   var setboxselect = document.querySelector("#setboxselect");
   var word = document.querySelector("#wordinput");
+  var def = document.querySelector("#definput");
 
   return { 
     // auth_token: token, 
     // title: setboxselect.value, 
     // card_word: word.value 
     setbox: {
-      id: 179,
+      id: setboxselect.children[setboxselect.selectedIndex].id,
       title: setboxselect.value,
       cards_attributes: [
           {
             card_word: word.value,
-            card_def: 'aaa'
+            card_def: def.value
           },
       ]
     }
