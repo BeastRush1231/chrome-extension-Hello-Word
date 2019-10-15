@@ -42,7 +42,7 @@ document.querySelector("#inputadmin").addEventListener("click", loginjson);
 
 function loginjson(e){
   e.preventDefault();
-  postData('http://localhost:3000/api/v1/login', getLoginFormValues())
+  postData('https://helloword.space/api/v1/login', getLoginFormValues())
     .then(
       function(data){
         localStorage.setItem('key', data['auth_token']);
@@ -103,7 +103,7 @@ document.querySelector("#inputjson").addEventListener("click", addwordjson);
 
 function addwordjson(e){
   e.preventDefault();
-  postData('http://localhost:3000/api/v1/addsetbox', getSetboxFormValues())
+  postData('https://helloword.space/api/v1/addsetbox', getSetboxFormValues())
     .then(function(data){
       console.log(data);
       alert('新增成功！');
@@ -157,7 +157,7 @@ function getLogoutFormValues(){
 // logout_token_data_api
 function logoutjson(e){
   e.preventDefault();
-  postData('http://localhost:3000/api/v1/logout', getLogoutFormValues())
+  postData('https://helloword.space/api/v1/logout', getLogoutFormValues())
     .then(
       function(data){
         console.log(data);
